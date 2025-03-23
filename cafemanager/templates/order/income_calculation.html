@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="text-center">Оплаченные заказы</h1>
+  <table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th>Заказ №</th>
+        <th>Стол №</th>
+        <th>Список блюд</th>
+        <th>Общая стоимость</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in object_list %}
+      <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.table_number }}</td>
+        <td>
+            {% for item in order.get_items %}
+              {{ item.item }} - {{ item.price }} руб.<br>
+            {% endfor %}
+        </td>
+        <td>{{ order.total_price }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="text-center">Выручка за смену составляет: {{ total_price }} руб.</p>
+{% endblock %}

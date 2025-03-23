@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="text-center">Добавить заказ</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                            <div class="alert alert-success">
+                                {{ message }}
+                            </div>
+                        {% elif message.tags == 'error' %}
+                            <div class="alert alert-danger">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <form method="post" class="form-horizontal">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="alert alert-danger">
+                                    {% for error in field.errors %}
+                                        <p class="text-danger">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-block">Добавить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

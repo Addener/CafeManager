@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="text-center">Управление заказами</h1>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <form method="get" class="form-inline">
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary">Поиск</button>
+        </form>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <table class="table table-striped table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th style="white-space: nowrap;">Заказ №</th>
+              <th style="white-space: nowrap;">Стол №</th>
+              <th style="white-space: nowrap;">Список блюд</th>
+              <th style="white-space: nowrap;">Общая стоимость</th>
+              <th style="white-space: nowrap;">Статус</th>
+              <th style="white-space: nowrap;">Выбор статуса</th>
+              <th style="white-space: nowrap;">Удаление</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in object_list %}
+            <tr>
+              <td>{{ order.id }}</td>
+              <td>{{ order.table_number }}</td>
+              <td>
+                {% for item in order.get_items %}
+                <span style="white-space: nowrap;">{{ item.item }} - {{ item.price }} руб.</span><br>
+                {% endfor %}
+              </td>
+              <td>{{ order.total_price }} руб.</td>
+              <td style="white-space: nowrap;">{{ order.status }}</td>
+              <td>
+                <form method="post" class="form-inline">
+                  {% csrf_token %}
+                  <select name="status" class="form-control">
+                    {% for status, label in STATUS_CHOISES %}
+                      <option value="{{ status }}" {% if order.status == status %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                  <input type="hidden" name="table_number" value="{{ order.table_number }}">
+                  <button type="submit" class="btn btn-sm btn-primary">Изменить статус</button>
+                </form>
+              </td>
+              <td>
+                <a href="{% url 'delete_order' order.pk %}" class="btn btn-sm btn-danger">Удалить</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
